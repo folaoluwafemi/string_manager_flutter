@@ -1,3 +1,4 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+- StringManger singleton class for managing, storing and translating flutter app strings using hive
+  and google_translate

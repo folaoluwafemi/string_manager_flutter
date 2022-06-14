@@ -42,8 +42,8 @@ final StringManager str = StringManager.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  StringManager(language: 'en');
-  await str.initialize();
+  StringManager(language: 'en'); //factory for the singleton instance
+  await str.initialize(); //you must initialize the stringManager first
   runApp(const MyApp());
 }
 
@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(
               str.reg('You have pushed the button this many times'),
+              //str.reg registers the string in stringManger and returns it to be used
             ),
             Text(
               '$_counter',
@@ -103,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {});
         },
         text2: str.reg('change language'),
+        //register "change language" in stringManager
       ),
     );
   }
