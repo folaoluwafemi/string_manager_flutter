@@ -21,4 +21,4 @@ jobs:
         name: install dependencies
         run: flutter pub get
       - name: test
-        run: dart test
+        run: flutter test
