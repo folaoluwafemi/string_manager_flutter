@@ -12,24 +12,22 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users know whether this
-package might be useful for them.
+A Flutter Package for Managing App Strings in flutter applications on all platforms particularly
+internationalization
 
 ## Features
 
+- keep your app strings DRY
+- easy internationalization
+- supports all platforms
 
 https://user-images.githubusercontent.com/89414401/173678119-8bd4f10b-7dc2-46c8-a1bd-e412925720ec.mp4
-
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Getting started
 
 TODO: List prerequisites and provide or point to information on how to start using the package.
 
 ## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples to `/example` folder.
 
 ```dart
 import 'package:flutter/material.dart';
@@ -108,5 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to contribute to the
-package, how to file issues, what response they can expect from the package authors, and more.
+If you face any errors kindly create an issue, and if you wish to add a feature I will be more than
+happy to merge your PR
+
+# Enjoy your internationalization redefined. 😃
