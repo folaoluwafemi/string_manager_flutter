@@ -21,9 +21,8 @@ internationalization
 - easy internationalization
 - supports all platforms
 
-<video>
-    <source src="https://user-images.githubusercontent.com/89414401/173678119-8bd4f10b-7dc2-46c8-a1bd-e412925720ec.mp4">
-</video>
+ https://user-images.githubusercontent.com/89414401/173678119-8bd4f10b-7dc2-46c8-a1bd-e412925720ec.mp4
+
 ## Getting started
 
 ```yaml
