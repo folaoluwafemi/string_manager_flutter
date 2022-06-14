@@ -25,7 +25,12 @@ https://user-images.githubusercontent.com/89414401/173678119-8bd4f10b-7dc2-46c8-
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to start using the package.
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  string_manager_flutter:
+```
 
 ## Usage
 
