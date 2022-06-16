@@ -1,5 +1,5 @@
-import 'package:hive/hive.dart';
-import 'package:string_manager_flutter/src/services/string_manager_service.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:string_manager_flutter/src/data/constants/constants.dart';
 
 class StringResource {
   final Map<String, String> _resources = {};
@@ -28,7 +28,7 @@ class StringResource {
 
 class StringResourceAdapter extends TypeAdapter<StringResource> {
   @override
-  final typeId = StringManager.storageTypeId;
+  final typeId = Constants.stringTypeId;
 
   @override
   StringResource read(BinaryReader reader) {

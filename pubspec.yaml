@@ -2,7 +2,7 @@ name: string_manager_flutter
 description:
   A Flutter Package for Managing App Strings in flutter applications on all platforms particularly
   internationalization.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/folaoluwafemi/string_manager_flutter
 
 environment:

@@ -4,13 +4,14 @@ import 'package:string_manager_flutter/src/services/string_manager_service.dart'
 import 'src/data/constants/constants.dart';
 import 'src/data/mocks/google_translation_mock.dart';
 import 'src/data/mocks/hive_mock.dart';
+import 'src/data/mocks/string_manager_mock.dart';
 
 void main() {
   group('setup tests', () {
-    late StringManagerTest stringManager;
+    late StringManagerMock stringManager;
 
     setUp(() {
-      stringManager = StringManagerTest(
+      stringManager = StringManagerMock(
         language: 'en',
         hive: HiveMock(),
         googleTranslator: GoogleTranslationMock(),
@@ -24,13 +25,72 @@ void main() {
     test('initialization returns normally', () {
       expectLater(() => stringManager.initialize(), returnsNormally);
     });
+
+    test('calling initialize sets stringManger.stringResource if saved before',
+        () async {
+      await stringManager.initialize();
+      stringManager.reg(iAmABoy);
+      stringManager.reg(itIsPlenty);
+
+      await stringManager.save();
+
+      await stringManager.close();
+
+      await stringManager.initialize();
+
+      expect(stringManager.stringResource.map.isNotEmpty, equals(true));
+    });
+    test(
+        'calling initialize translates stringManger.stringResource if saved before',
+        () async {
+      //setup
+      HiveMock hiveMock = HiveMock(
+        returnDefaults: true,
+      );
+      GoogleTranslationMock translator = GoogleTranslationMock();
+      StringManagerMock strManager = StringManagerMock(
+        language: 'en',
+        hive: hiveMock,
+        googleTranslator: translator,
+      );
+
+      await strManager.initialize();
+
+      strManager.reg(iAmABoy);
+      strManager.reg(itIsPlenty);
+
+      List<String> initialValues = strManager.stringResource.resources;
+      await strManager.save();
+
+      await strManager.close();
+
+      strManager = StringManagerMock(
+        language: 'yo',
+        googleTranslator: translator,
+        hive: hiveMock,
+      );
+
+      await strManager.initialize();
+
+      List<String> finalValues = strManager.stringResource.resources;
+      expect(
+        checkListValueEquality(
+          initialValues,
+          finalValues,
+        ),
+        equals(false),
+      );
+      expect(finalValues.isNotEmpty, equals(true));
+      expect(finalValues.contains(iAmABoyTranslation), equals(true));
+      expect(finalValues.contains(itIsPlentyTranslation), equals(true));
+    });
   });
 
   group('stringManager.reg() tests', () {
-    late StringManagerTest stringManager;
+    late StringManagerMock stringManager;
 
     setUp(() {
-      stringManager = StringManagerTest(
+      stringManager = StringManagerMock(
         language: 'en',
         hive: HiveMock(),
         googleTranslator: GoogleTranslationMock(),
@@ -77,11 +137,11 @@ void main() {
   });
 
   group('stringManager.translate() tests', () {
-    late StringManagerTest stringManager;
+    late StringManagerMock stringManager;
     group('setup test', () {
-      late StringManagerTest setupStringManger;
+      late StringManagerMock setupStringManger;
       setUp(() async {
-        setupStringManger = StringManagerTest(
+        setupStringManger = StringManagerMock(
           language: 'en',
           googleTranslator: GoogleTranslationMock(),
           hive: HiveMock(),
@@ -92,23 +152,23 @@ void main() {
           'calling .translate() without initializing string manager results in an assertion error',
           () {
         expectLater(
-            () => setupStringManger.translate('en'), throwsAssertionError);
+            () => setupStringManger.translate(to: 'en'), throwsAssertionError);
       });
 
       test(
           'calling .translate() on an empty stringManager.stringResource results in an assertion error',
           () {
-        //setup
+        ///setup
         setupStringManger.initialize();
 
         expectLater(
-          () => setupStringManger.translate('en'),
+          () => setupStringManger.translate(to: 'en'),
           throwsAssertionError,
         );
       });
     });
     setUp(() async {
-      stringManager = StringManagerTest(
+      stringManager = StringManagerMock(
         language: 'en',
         googleTranslator: GoogleTranslationMock(),
         hive: HiveMock(),
@@ -121,22 +181,22 @@ void main() {
     });
 
     test('returns normally', () {
-      expectLater(() => stringManager.translate('en'), returnsNormally);
+      expectLater(() => stringManager.translate(to: 'en'), returnsNormally);
     });
 
     test(
         'if translation language is the same as initialization language, stringManager.stringResource remains the same',
         () async {
-      await stringManager.translate('en');
+      await stringManager.translate(to: 'en');
 
       List<String> keys = stringManager.stringResource.map.keys.toList();
       List<String> values = stringManager.stringResource.map.values.toList();
 
-      //since dart List is actually a linkedList and dart Map is a LinkedHashMap the order remains the same
+      ///since dart List is actually a linkedList and dart Map is a LinkedHashMap the order remains the same
       expect(checkListValueEquality(keys, values), equals(true));
     });
     test('translates correctly', () async {
-      await stringManager.translate('yo');
+      await stringManager.translate(to: 'yo');
 
       expect(
         stringManager.stringResource.map[iAmABoy],
@@ -151,9 +211,9 @@ void main() {
 
   group('storage tests', () {
     group('setup tests', () {
-      late StringManagerTest setupStringManager;
+      late StringManagerMock setupStringManager;
       setUp(() {
-        setupStringManager = StringManagerTest(
+        setupStringManager = StringManagerMock(
           language: 'en',
           googleTranslator: GoogleTranslationMock(),
           hive: HiveMock(),
@@ -172,9 +232,9 @@ void main() {
       });
     });
     group('stringManager.save() tests', () {
-      late StringManagerTest stringManager;
+      late StringManagerMock stringManager;
       setUp(() async {
-        stringManager = StringManagerTest(
+        stringManager = StringManagerMock(
           language: 'en',
           googleTranslator: GoogleTranslationMock(),
           hive: HiveMock(),
@@ -195,9 +255,9 @@ void main() {
       });
     });
     group('stringManager.getStrings() tests', () {
-      late StringManagerTest stringManager;
+      late StringManagerMock stringManager;
       setUp(() async {
-        stringManager = StringManagerTest(
+        stringManager = StringManagerMock(
           language: 'en',
           googleTranslator: GoogleTranslationMock(),
           hive: HiveMock(),
@@ -223,19 +283,11 @@ void main() {
           stringManager.reg(iAmABoy);
           stringManager.reg(itIsPlenty);
 
-          //save the current values
           await stringManager.save();
 
-          //change the values so as to check against it's change
-          await stringManager.translate('yo');
-
-          List<String> currentValues =
-              stringManager.stringResource.map.values.toList();
+          await stringManager.translate(to: 'yo');
 
           stringManager.getStrings(language: 'en');
-
-          List<String> newValues =
-              stringManager.stringResource.map.values.toList();
 
           expect(stringManager.stringResource.map.isNotEmpty, equals(true));
         },
@@ -246,11 +298,11 @@ void main() {
           stringManager.reg(iAmABoy);
           stringManager.reg(itIsPlenty);
 
-          //save the current values
+          ///save the current values
           await stringManager.save();
 
-          //change the values so as to check against it's change
-          await stringManager.translate('yo');
+          ///change the values so as to check against it's change
+          await stringManager.translate(to: 'yo');
 
           List<String> currentValues =
               stringManager.stringResource.map.values.toList();
@@ -269,17 +321,17 @@ void main() {
 
   group('close() test', () {
     test('setup test -- calling ', () {
-      late StringManagerTest setupStringManager;
-      setupStringManager = StringManagerTest(
+      late StringManagerMock setupStringManager;
+      setupStringManager = StringManagerMock(
         language: 'en',
         googleTranslator: GoogleTranslationMock(),
         hive: HiveMock(),
       );
       expect(setupStringManager.close, throwsAssertionError);
     });
-    late StringManagerTest stringManger;
+    late StringManagerMock stringManger;
     setUp(() async {
-      stringManger = StringManagerTest(
+      stringManger = StringManagerMock(
         language: 'en',
         googleTranslator: GoogleTranslationMock(),
         hive: HiveMock(),
@@ -301,7 +353,10 @@ void main() {
   });
 }
 
-bool checkListValueEquality(List list1, list2) {
+bool checkListValueEquality(List list1, List list2) {
+  if (list1.length != list2.length) {
+    return false;
+  }
   bool equal = false;
   for (int i = 0; i < list1.length; i++) {
     equal = list1[i] == list2[i];
