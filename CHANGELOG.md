@@ -8,3 +8,7 @@
 
 - Supports sound null safety
 - fix issue of being unable to translate stored strings when initialized in a new locale
+
+## 0.0.3
+
+- Fix static issues
