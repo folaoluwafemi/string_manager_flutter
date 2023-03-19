@@ -54,6 +54,12 @@ class MockBox<E> extends Mock implements Box<E> {
   }
 }
 
+extension XMock on HiveInterface {
+  Future<void> initFlutter([String? subDir]) async {
+    return Future.value();
+  }
+}
+
 class HiveMock extends Mock implements HiveInterface {
   final bool _returnDefaults;
 
@@ -78,8 +84,11 @@ class HiveMock extends Mock implements HiveInterface {
   }
 
   @override
-  void registerAdapter<T>(TypeAdapter<T> adapter,
-      {bool internal = false, bool override = false}) {
+  void registerAdapter<T>(
+    TypeAdapter<T> adapter, {
+    bool internal = false,
+    bool override = false,
+  }) {
     dev.log('adapter ${T.runtimeType} registered');
   }
 

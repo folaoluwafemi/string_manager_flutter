@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:string_manager_flutter/src/data/constants/constants.dart';
 import 'package:string_manager_flutter/src/data/models/string_resource.dart';
@@ -9,8 +10,13 @@ class HiveStorage {
 
   HiveStorage({required HiveInterface hive}) : _hive = hive;
 
+  @protected
+  Future<void> initializeStorage(String path) async {
+    // _hive.initFlutter(path);
+  }
+
   Future<void> initialize() async {
-    _hive.initFlutter('string_path');
+    await initializeStorage('string_path');
     if (!_hive.isAdapterRegistered(Constants.stringTypeId)) {
       _hive.registerAdapter<StringResource>(StringResourceAdapter());
     }

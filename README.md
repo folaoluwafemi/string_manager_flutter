@@ -29,9 +29,9 @@ internationalization
 dependencies:
   flutter:
     sdk: flutter
-  string_manager_flutter:
+  string_manager_flutter: 0.0.3
 ```
-
+Do not forget to call ```dart await Hive.initFlutter();``` in your main.dart
 ## Usage
 
 ```dart
@@ -42,6 +42,7 @@ final StringManager str = StringManager.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   StringManager(language: 'en'); //factory for the singleton instance
   await str.initialize(); //you must initialize the stringManager first
   runApp(const MyApp());

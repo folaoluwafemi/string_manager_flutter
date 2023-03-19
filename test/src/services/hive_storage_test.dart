@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:string_manager_flutter/src/data/models/string_resource.dart';
 import 'package:string_manager_flutter/src/services/hive_storage.dart';
 
@@ -12,20 +10,17 @@ void main() {
 
   final HiveMock hiveMock = HiveMock();
 
-  setUpAll(() {
+  setUpAll(() async {
     hiveStorage = HiveStorage(hive: hiveMock);
   });
 
-  when(getApplicationDocumentsDirectory()).thenAnswer(
-    (realInvocation) => Future.value(),
-  );
-
   test('initializing hiveStorage completes normally', () async {
-    expectLater(hiveStorage.initialize(), completes);
+    // when(hiveMock.initFlutter()).thenAnswer((realInvocation) => Future.value());
+    expectLater(() => hiveStorage.initialize(), returnsNormally);
   });
 
   test('hiveStorage\'s getStrings method returns an instance of StringResource',
-      () {
+      () async {
     expect(hiveStorage.getStrings('en'), isA<StringResource>());
   });
 
