@@ -10,12 +10,13 @@ class HiveStorage {
   HiveStorage({required HiveInterface hive}) : _hive = hive;
 
   Future<void> initialize() async {
-    await _hive.initFlutter('string_path');
+    _hive.initFlutter('string_path');
     if (!_hive.isAdapterRegistered(Constants.stringTypeId)) {
       _hive.registerAdapter<StringResource>(StringResourceAdapter());
     }
-    _storageBox ??=
-        await _hive.openBox<StringResource>(Constants.stringStorageKey);
+    _storageBox ??= await _hive.openBox<StringResource>(
+      Constants.stringStorageKey,
+    );
     _languageBox ??= await _hive.openBox<String>('languageKey');
   }
 
@@ -38,8 +39,10 @@ class HiveStorage {
     await _languageBox?.put(Constants.languageStorageKey, language);
   }
 
-  Future<void> storeStrings(StringResource resource,
-      {required String languageKey}) async {
+  Future<void> storeStrings(
+    StringResource resource, {
+    required String languageKey,
+  }) async {
     assert(
         resource.map.isNotEmpty, 'string resource must not have an empty map');
     await _storageBox?.put(languageKey, resource);

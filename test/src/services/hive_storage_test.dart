@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:string_manager_flutter/src/data/models/string_resource.dart';
 import 'package:string_manager_flutter/src/services/hive_storage.dart';
 
@@ -8,12 +10,18 @@ import '../data/mocks/hive_mock.dart';
 void main() {
   late HiveStorage hiveStorage;
 
+  final HiveMock hiveMock = HiveMock();
+
   setUpAll(() {
-    hiveStorage = HiveStorage(hive: HiveMock());
+    hiveStorage = HiveStorage(hive: hiveMock);
   });
 
+  when(getApplicationDocumentsDirectory()).thenAnswer(
+    (realInvocation) => Future.value(),
+  );
+
   test('initializing hiveStorage completes normally', () async {
-    expectLater(() => hiveStorage.initialize(), returnsNormally);
+    expectLater(hiveStorage.initialize(), completes);
   });
 
   test('hiveStorage\'s getStrings method returns an instance of StringResource',
