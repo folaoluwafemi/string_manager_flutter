@@ -6,6 +6,7 @@ import '../constants/constants.dart';
 class TranslationMock extends Mock implements Translation {
   @override
   final String text;
+  @override
   final String source;
 
   TranslationMock(

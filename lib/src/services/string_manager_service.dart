@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:string_manager_flutter/src/data/constants/constants.dart';
 import 'package:string_manager_flutter/src/data/models/string_resource.dart';
 import 'package:string_manager_flutter/src/services/hive_storage.dart';
